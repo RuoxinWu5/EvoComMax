@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 
 
@@ -19,7 +20,7 @@ def plot_opinion_distribution(initial_z, final_z, title="Opinion Distribution Co
     """
     绘制初始和最终观点分布的对比直方图
     """
-    fig, axes = plt.subplots(1, 2, figsize=(14, 7))
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 
     # 计算条形宽度
     bins = 20
@@ -48,4 +49,43 @@ def plot_opinion_distribution(initial_z, final_z, title="Opinion Distribution Co
     axes[1].set_ylim([0, max_y])
 
     plt.tight_layout()  # 自动调整子图的布局
+    plt.show()
+
+
+def plot_network_comparison(G, initial_values, final_values, title="Network Structure Comparison"):
+    """
+    绘制初始和最终网络拓扑结构的对比
+
+    参数:
+    - G: networkx.Graph，社交网络
+    - initial_values: list，初始观点值（用于着色）
+    - final_values: list，最终观点值（用于着色）
+    - title: str，图标题
+    """
+    # 生成固定布局，确保两张图的节点位置相同
+    layout = nx.spring_layout(G, seed=42)
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+
+    # 归一化颜色数据
+    vmin = min(min(initial_values), min(final_values))
+    vmax = max(max(initial_values), max(final_values))
+    norm = plt.Normalize(vmin, vmax)
+    cmap = plt.cm.Blues
+
+    # 初始状态的网络拓扑
+    axes[0].set_title("Initial Network Opinions")
+    nx.draw(G, pos=layout, with_labels=True, node_color=initial_values, cmap=cmap, ax=axes[0], node_size=500,
+            font_size=10, edge_color='gray', vmin=vmin, vmax=vmax)
+    # 最终状态的网络拓扑
+    axes[1].set_title("Final Network Opinions")
+    nx.draw(G, pos=layout, with_labels=True, node_color=final_values, cmap=cmap, ax=axes[1], node_size=500,
+            font_size=10, edge_color='gray', vmin=vmin, vmax=vmax)
+
+    # 添加颜色条
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+    sm.set_array([])
+    cbar = fig.colorbar(sm, ax=axes, orientation='horizontal', fraction=0.03, pad=0.1)
+    cbar.set_label("Opinion Value")
+
+    plt.suptitle(title)
     plt.show()
