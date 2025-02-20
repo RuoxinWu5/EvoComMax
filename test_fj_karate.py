@@ -17,7 +17,9 @@ s = np.random.rand(len(G.nodes))
 
 # Step3: 初始化FJ模型并进行迭代，直到收敛或达到最大迭代次数
 model = FJModel(A, s)
-history = model.iterate(max_iter=100, tolerance=1e-6)
+print("最初冲突风险值:", model.conflict_risk(threshold=0.1))
+history = model.iterate(max_iter=3)
+print("最终冲突风险值:", model.conflict_risk(threshold=0.1))
 
 # Step4: 可视化结果
 # 1. 绘制观点最大变化的收敛曲线

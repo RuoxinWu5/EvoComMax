@@ -18,9 +18,10 @@ model.detect_communities()
 
 # Step4: 打印初始观点和社区结构
 print("最初观点分布:", s)
-print("检测到的社区：")
+print("检测到的社区:")
 for comm_id, nodes in model.communities.items():
     print(f"社区 {comm_id}: 节点 {nodes}")
+print("冲突风险值:", model.conflict_risk())
 
 # Step5: 绘制网络拓扑结构和社区结构
 plot_network_and_community(G, values=model.s, communities=model.communities)
