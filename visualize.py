@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import networkx as nx
 import numpy as np
 
@@ -88,4 +89,52 @@ def plot_network_comparison(G, initial_values, final_values, title="Network Stru
     cbar.set_label("Opinion Value")
 
     plt.suptitle(title)
+    plt.show()
+
+
+def plot_network_and_community(G, values, communities, title1="Opinion Distribution", title2="Community Detection"):
+    """
+    绘制网络拓扑结构及其社区划分：
+    - 左图：节点颜色表示观点值
+    - 右图：节点颜色表示社区，外圈标记社区
+
+    参数:
+    - G: networkx.Graph，社交网络
+    - values: list，观点值（用于左图着色）
+    - communities: dict，社区划分结果，键为社区ID，值为节点列表（用于右图着色）
+    - title1: str，左图标题（默认"Opinion Distribution"）
+    - title2: str，右图标题（默认"Community Detection"）
+    """
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))  # 创建左右两个子图
+    pos = nx.spring_layout(G)  # 生成固定布局，确保两张图的节点位置相同
+
+    # 左侧：观点分布
+    nx.draw(G, pos, with_labels=True, node_color=values, cmap=plt.cm.Blues,
+            node_size=500, font_size=10, edge_color='gray', ax=axes[0])
+    axes[0].set_title(title1)
+
+    # 右侧：社区检测
+    unique_colors = [plt.cm.Set1(i) for i in range(len(communities))]
+    color_map = {}  # 存储每个节点的颜色
+    for idx, (comm_id, nodes) in enumerate(communities.items()):
+        color = unique_colors[idx % len(unique_colors)]
+        for node in nodes:
+            color_map[node] = color
+    node_colors = [color_map[node] for node in G.nodes]
+
+    nx.draw(G, pos, with_labels=True, node_color=node_colors, node_size=500,
+            font_size=10, edge_color='gray', ax=axes[1])
+
+    # 圈出社区
+    ax = axes[1]
+    for comm_id, nodes in communities.items():
+        x, y = zip(*[pos[n] for n in nodes])
+        center_x, center_y = np.mean(x), np.mean(y)
+        radius = max(np.std(x), np.std(y)) + 0.1  # 计算合适的半径
+        circle = patches.Circle((center_x, center_y), radius, fill=False,
+                                edgecolor="red", linewidth=2, linestyle='dashed')
+        ax.add_patch(circle)
+
+    axes[1].set_title(title2)
+
     plt.show()

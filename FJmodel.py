@@ -4,7 +4,9 @@ Friedkin-Johnsen (FJ) 模型类，用于模拟有向图中个体意见的演变�
 定义了 iterate() 方法模拟意见演变过程，直到达到最大迭代次数或满足收敛条件。
 每次迭代计算表达观点的新值，并记录最大观点变化历史。
 """
+import networkx as nx
 import numpy as np
+from community import community_louvain
 
 
 class FJModel:
@@ -19,6 +21,20 @@ class FJModel:
         self.n = len(graph)
         self.s = s if s is not None else np.random.rand(self.n)
         self.z = self.s.copy()
+        self.communities = None  # 存储社区结构
+
+    def detect_communities(self):
+        """
+        使用Louvain算法检测社区
+        """
+        G = nx.from_numpy_array(self.A)
+        partition = community_louvain.best_partition(G)
+        # 按社区ID分组节点
+        self.communities = {}
+        for node, comm_id in partition.items():
+            if comm_id not in self.communities:
+                self.communities[comm_id] = []
+            self.communities[comm_id].append(node)
 
     def iterate(self, max_iter, tolerance=None):
         """
