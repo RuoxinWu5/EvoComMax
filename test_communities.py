@@ -1,7 +1,7 @@
 import numpy as np
 import networkx as nx
-from FJmodel import FJModel
-from visualize import plot_network_and_community
+from fj_model import FJModel
+from visualization import plot_network_and_community
 import matplotlib.pyplot as plt
 
 # Step1: 加载空手道俱乐部网络

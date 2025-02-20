@@ -19,7 +19,7 @@
 
 ## 代码结构
 
-### FJmodel.py
+### fj_model.py
 包含了Friedkin-Johnsen模型的核心实现。定义了一个 `FJModel` 类，该类初始化模型并提供了迭代计算表达观点平衡状态的方法。 主要功能包括：
 包含了 Friedkin-Johnsen 模型的核心实现。定义了一个 `FJModel` 类，该类初始化模型并提供了迭代计算表达观点平衡状态的方法。主要功能包括：
 * **初始化模型**：接受邻接矩阵和可选的内部观点向量。
@@ -27,7 +27,7 @@
 * **收敛检查**：可选参数，用于提前结束迭代。
 * **社区检测**：使用 Louvain 算法检测社区，并返回网络中的社区结构。
 
-### visualize.py
+### visualization.py
 提供了可视化工具，用于绘制模型的收敛过程、最终观点分布以及社区结构。
 * **plot_convergence**：绘制观点最大变化的收敛曲线。
 * **plot_opinion_distribution**：绘制初始与最终观点分布的对比直方图，帮助分析节点观点的变化。
@@ -36,23 +36,23 @@
   - 左侧显示节点观点的颜色分布。
   - 右侧使用 Louvain 社区检测算法识别社区，并用不同颜色区分社区，同时用红色虚线圈出社区。
 
-### FJkarate.py
+### test_fj_karate.py
 展示了如何在实际的空手道俱乐部网络上应用Friedkin-Johnsen模型。主要功能包括：
 * **加载网络**：加载空手道俱乐部网络，生成随机内部观点。
 * **运行FJ模型**：初始化 `FJModel` 类并执行迭代计算，直到模型收敛或达到最大迭代次数。
 * **输出**： 迭代过程观点变化、初始观点分布和最终观点分布。
 * **可视化结果**：调用 `visualize.py` 中的函数来绘制收敛曲线、观点分布对比直方图、初始和最终网络拓扑结构的对比图。
 
-### test_community.py
+### test_communities.py
 用于测试 FJ 模型在社区检测中的表现。
 * **加载网络**：加载空手道俱乐部网络，生成随机内部观点。
 * **运行FJ模型**：初始化 `FJModel` 类并检测社区。
 * **输出**： 初始观点分布和社区结构。
-* **可视化结果**：调用 `plot_network_and_community` 进行可视化，展示观点分布和社区划分的对比视图。
+* **可视化结果**：调用 `plot_network_and_community` 展示观点分布和社区划分的对比视图。
 
 ## 如何运行
-运行 `FJkarate.py` 来执行空手道俱乐部网络示例，或运行 `test_community.py` 来测试社区检测功能。
+运行 `test_fj_karate.py` 来执行空手道俱乐部网络示例，或运行 `test_communities.py` 来测试社区检测功能。
 ```bash
-python FJkarate.py
-python test_community.py
+python test_fj_karate.py
+python test_communities.py
 ```
